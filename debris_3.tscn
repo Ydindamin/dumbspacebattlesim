@@ -1,0 +1,54 @@
+[gd_scene load_steps=7 format=3 uid="uid://b63l48cdwlolh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_we8ku"]
+size = Vector3(1, 3, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nedvc"]
+size = Vector3(1, 3, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qhh21"]
+size = Vector3(1, 2, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ai4ke"]
+size = Vector3(1, 2, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5msrv"]
+size = Vector3(1, 1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ft8oq"]
+size = Vector3(1, 1, 0.1)
+
+[node name="debris3" type="RigidBody3D"]
+mass = 60.0
+gravity_scale = 0.0
+angular_velocity = Vector3(0.017453292, 0, -0.017453292)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_we8ku")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_nedvc")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.45, 0, 0.45)
+shape = SubResource("BoxShape3D_we8ku")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.45, 0, 0.45)
+mesh = SubResource("BoxMesh_nedvc")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.45, 0.5, 0.45)
+shape = SubResource("BoxShape3D_qhh21")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.45, 0.5, 0.45)
+mesh = SubResource("BoxMesh_ai4ke")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
+shape = SubResource("BoxShape3D_5msrv")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
+mesh = SubResource("BoxMesh_ft8oq")

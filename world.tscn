@@ -1,0 +1,313 @@
+[gd_scene load_steps=20 format=3 uid="uid://ckavqb25bdaul"]
+
+[ext_resource type="Script" uid="uid://bwcalexqj8t6y" path="res://scripts/playerController.gd" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://ey0fupgyf7i2" path="res://debris_1.tscn" id="2_tlwt5"]
+[ext_resource type="PackedScene" uid="uid://brod0wp1vjaga" path="res://debris_2.tscn" id="3_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://b63l48cdwlolh" path="res://debris_3.tscn" id="4_aqk2v"]
+
+[sub_resource type="Environment" id="Environment_f3sb7"]
+background_mode = 1
+ambient_light_color = Color(0.48962224, 0.48962224, 0.48962218, 1)
+ambient_light_energy = 16.0
+reflected_light_source = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_gv5m4"]
+size = Vector3(0.8, 1, 2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tlwt5"]
+top_radius = 0.3
+bottom_radius = 0.4
+height = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_aqk2v"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
+size = Vector3(0.8, 1, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3sb7"]
+albedo_color = Color(18.892157, 18.892157, 18.892157, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 16.0
+backlight_enabled = true
+backlight = Color(18.892157, 18.892157, 18.892157, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_tlwt5"]
+material = SubResource("StandardMaterial3D_f3sb7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fj7yv"]
+albedo_color = Color(0, 0.23529412, 1, 1)
+emission_enabled = true
+emission = Color(0.60758764, 0.8056394, 1, 1)
+emission_energy_multiplier = 0.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_aqk2v"]
+material = SubResource("StandardMaterial3D_fj7yv")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
+radius = 9.0
+height = 39.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+albedo_color = Color(0.12591085, 0.12591082, 0.12591088, 1)
+metallic = 1.0
+emission = Color(0.080783345, 0.080783345, 0.080783345, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_dwbse"]
+material = SubResource("StandardMaterial3D_036b0")
+radius = 10.0
+height = 40.0
+rings = 7
+
+[sub_resource type="SphereMesh" id="SphereMesh_fj7yv"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_tlwt5"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_tlwt5"]
+radius = 0.01
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_f3sb7")
+
+[node name="playership" type="RigidBody3D" parent="."]
+mass = 1000.0
+gravity_scale = 0.0
+can_sleep = false
+script = ExtResource("1_f3sb7")
+lookSpeed = 100.0
+boostStrength = 2800.0
+rollStrength = 640.0
+
+[node name="fuselage" type="MeshInstance3D" parent="playership"]
+mesh = SubResource("BoxMesh_gv5m4")
+
+[node name="rocketcone" type="MeshInstance3D" parent="playership/fuselage"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.2)
+mesh = SubResource("CylinderMesh_tlwt5")
+
+[node name="conelight" type="OmniLight3D" parent="playership/fuselage/rocketcone"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -0.29999995, 1.3113411e-08)
+light_color = Color(0.78431374, 0.54901963, 0, 1)
+shadow_enabled = true
+
+[node name="lightcanL" type="MeshInstance3D" parent="playership/fuselage"]
+transform = Transform3D(0.9961947, 0.08715574, -3.8096983e-09, 0, -4.371139e-08, -1, -0.08715574, 0.9961947, -4.3545054e-08, 0.4, 0, 0.92)
+mesh = SubResource("CylinderMesh_aqk2v")
+skeleton = NodePath("../..")
+
+[node name="frontlightL" type="SpotLight3D" parent="playership/fuselage/lightcanL"]
+transform = Transform3D(1, 8.881784e-16, 0, 0, -1.0728441e-07, -1, -4.440892e-16, 1, -1.07284414e-07, -0.009587109, 0.10958135, -4.7899533e-09)
+light_color = Color(0, 0, 0, 1)
+light_specular = 1.0
+spot_range = 40.0
+spot_attenuation = 0.2
+spot_angle = 15.0
+spot_angle_attenuation = 0.21022354
+
+[node name="lightcanR" type="MeshInstance3D" parent="playership/fuselage"]
+transform = Transform3D(0.9961947, -0.08715574, 3.8096983e-09, 0, -4.371139e-08, -1, 0.08715574, 0.9961947, -4.3545054e-08, -0.4, 0, 0.92)
+mesh = SubResource("CylinderMesh_aqk2v")
+skeleton = NodePath("../..")
+
+[node name="frontlightR" type="SpotLight3D" parent="playership/fuselage/lightcanR"]
+transform = Transform3D(1, -8.881784e-16, 0, 0, -1.0728441e-07, -1, 4.440892e-16, 1, -1.07284414e-07, 0.009587109, 0.10958135, -4.7899533e-09)
+light_color = Color(0, 0, 0, 1)
+light_specular = 1.0
+spot_range = 40.0
+spot_attenuation = 0.2
+spot_angle = 15.0
+spot_angle_attenuation = 0.21022354
+
+[node name="lasgun" type="Node3D" parent="playership/fuselage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.01)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="playership"]
+shape = SubResource("BoxShape3D_f3sb7")
+
+[node name="Camera3D" type="Camera3D" parent="playership"]
+transform = Transform3D(-1, 2.2626681e-08, -8.444392e-08, 0, 0.9659259, 0.25881904, 8.742278e-08, 0.25881907, -0.9659259, 0, 2, -3)
+
+[node name="sun" type="MeshInstance3D" parent="."]
+transform = Transform3D(2048, 0, 0, 0, 2048, 0, 0, 0, 2048, 128, 128, 4096)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="sun"]
+light_color = Color(0.9171811, 0.9999997, 0.89824015, 1)
+light_energy = 16.0
+light_indirect_energy = 16.0
+shadow_enabled = true
+omni_range = 8192.0
+omni_attenuation = 0.1
+
+[node name="planet" type="MeshInstance3D" parent="."]
+transform = Transform3D(256, 0, 0, 0, 256, 0, 0, 0, 256, 0, 0, -1391.4263)
+mesh = SubResource("SphereMesh_aqk2v")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="planet"]
+shadow_enabled = true
+omni_range = 1280.0
+omni_attenuation = 0.4
+
+[node name="asteroid" type="RigidBody3D" parent="."]
+transform = Transform3D(0.47084484, 0.6696023, 0.5744023, -0.17867894, 0.7099764, -0.6811807, -0.86393225, 0.21809682, 0.45393258, -25.999737, -5.5847397, 16.99529)
+mass = 10000.0
+gravity_scale = 0.0
+angular_velocity = Vector3(0, -0.034906585, 0.17453292)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="asteroid"]
+shape = SubResource("CapsuleShape3D_tlwt5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="asteroid"]
+mesh = SubResource("SphereMesh_dwbse")
+
+[node name="asteroid2" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.09815097, -0.99237794, -0.074513525, 0.84696424, -0.12261211, 0.5173178, -0.52251107, -0.01233502, 0.8525432, 18.749828, -0.012763977, -58.830414)
+mass = 10000.0
+gravity_scale = 0.0
+angular_velocity = Vector3(0, -0.034906585, 0.17453292)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="asteroid2"]
+shape = SubResource("CapsuleShape3D_tlwt5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="asteroid2"]
+mesh = SubResource("SphereMesh_dwbse")
+
+[node name="sputnik" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.5359558, 0.23914288, 0.80966806, 0.17708209, -0.9058647, 0.3847741, 0.8254657, 0.34959954, 0.4431554, -1.5995085, -1.9169834, 8)
+mass = 100.0
+gravity_scale = 0.0
+
+[node name="body" type="MeshInstance3D" parent="sputnik"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = SubResource("SphereMesh_fj7yv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="sputnik"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("SphereShape3D_tlwt5")
+
+[node name="antenna1" type="MeshInstance3D" parent="sputnik"]
+transform = Transform3D(0.9659258, -0.25881904, 1.131334e-08, 0, -4.371139e-08, -1, 0.25881904, 0.9659258, -4.222196e-08, 1.25, 0, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+
+[node name="antenna2" type="MeshInstance3D" parent="sputnik"]
+transform = Transform3D(0.96592575, 0.25881904, -1.1313339e-08, 0, -4.371139e-08, -0.99999994, -0.258819, 0.9659258, -4.2221956e-08, -1.25, 0, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+skeleton = NodePath("../antenna1")
+
+[node name="antenna3" type="MeshInstance3D" parent="sputnik"]
+transform = Transform3D(0.9999999, 0, 0, 0, -0.25881898, -0.96592575, 0, 0.96592563, -0.258819, 0, 1.25, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+
+[node name="antenna4" type="MeshInstance3D" parent="sputnik"]
+transform = Transform3D(0.99999994, 0, 0, 0, -0.25881904, 0.96592575, 0, -0.9659258, -0.258819, 0, -1.25, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+skeleton = NodePath("../antenna3")
+
+[node name="star" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 128, 128)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, -256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -128, 128, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star8" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, -128, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -128, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star10" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 0, 0)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star11" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 128, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star12" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star13" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 0, 0)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star14" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 0, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star15" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 0, -128)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star16" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="debris1" parent="." instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.48672223, 0.82543886, 0.28592375, -0.7117188, 0.5644917, -0.4180974, -0.50651544, 0, 0.862231, 3.2184777, 2.3724322, 3.7976553)
+
+[node name="debris2" parent="." instance=ExtResource("3_aqk2v")]
+transform = Transform3D(0.30831975, 0, -0.9512828, 0.65045923, 0.729697, 0.21081997, 0.6941482, -0.6837706, 0.22498, 2.4678926, 4.444309, 6.568337)
+
+[node name="debris3" parent="." instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.6319055, 0.2544991, -0.7320696, -0.3095297, 0.94882226, 0.06267285, 0.7105539, 0.18699408, 0.6783409, -9.731171, -0.8537636, 4.44284)
+
+[node name="debris4" parent="." instance=ExtResource("3_aqk2v")]
+transform = Transform3D(-0.5652702, 0.65045923, -0.50731885, 0.8215279, 0.3883052, -0.41750568, -0.07457583, -0.65278006, -0.75386775, -3.0195532, 5.339588, 16.667736)
+
+[node name="debris5" parent="." instance=ExtResource("4_aqk2v")]
+transform = Transform3D(0.6024978, 0.26142251, 0.754092, 0.79812056, -0.19734676, -0.56926084, 0, 0.94483465, -0.32754767, 4.2653217, 0.26684558, 22.511911)
+angular_velocity = Vector3(0.17453292, 0, 0.34906584)
+
+[node name="debris6" parent="." instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.48672223, 0.82543886, 0.28592375, -0.7117188, 0.5644917, -0.4180974, -0.50651544, 0, 0.862231, -7.8348517, 2.3724318, -4.21529)
+
+[node name="debris7" parent="." instance=ExtResource("3_aqk2v")]
+transform = Transform3D(0.30831975, 0, -0.9512828, 0.65045923, 0.729697, 0.21081997, 0.6941482, -0.6837706, 0.22498, -5.9740047, -3.5490627, -18.275238)
+
+[node name="debris8" parent="." instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.6319055, 0.2544991, -0.7320696, -0.3095297, 0.94882226, 0.06267285, 0.7105539, 0.18699408, 0.6783409, 6.3335495, -4.6117477, -11.433695)
+
+[node name="debris9" parent="." instance=ExtResource("3_aqk2v")]
+transform = Transform3D(-0.5652702, 0.65045923, -0.50731885, 0.8215279, 0.3883052, -0.41750568, -0.07457583, -0.65278006, -0.75386775, 5.6756067, 5.339588, -15.596878)

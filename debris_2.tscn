@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://brod0wp1vjaga"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_we8ku"]
+size = Vector3(1, 1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6e5v2"]
+albedo_color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+metallic = 1.0
+roughness = 0.4
+
+[sub_resource type="PrismMesh" id="PrismMesh_4a6og"]
+material = SubResource("StandardMaterial3D_6e5v2")
+size = Vector3(1, 1, 0.1)
+
+[node name="debris2" type="RigidBody3D"]
+mass = 60.0
+gravity_scale = 0.0
+angular_velocity = Vector3(0.017453292, 0, -0.017453292)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_we8ku")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PrismMesh_4a6og")
