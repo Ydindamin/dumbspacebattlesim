@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dp6ux6yt1vn7n"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_d7cal"]
+height = 0.08
+radius = 0.080078125
+
+[sub_resource type="PrismMesh" id="PrismMesh_ir15w"]
+size = Vector3(0.1, 0.1, 0.05)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_joe23"]
+top_radius = 0.01
+bottom_radius = 0.02
+height = 0.04
+
+[node name="RCS" type="Area3D" unique_id=696507406]
+
+[node name="hitbox" type="CollisionShape3D" parent="." unique_id=282120673]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -0.01, 0.01)
+shape = SubResource("CylinderShape3D_d7cal")
+
+[node name="housing" type="MeshInstance3D" parent="." unique_id=1577499667]
+mesh = SubResource("PrismMesh_ir15w")
+
+[node name="coneY" type="MeshInstance3D" parent="housing" unique_id=1255162194]
+transform = Transform3D(1, 0, 0, 0, -0.7071067, 0.7071067, 0, -0.7071067, -0.7071067, 0, 0.042, 0.02)
+mesh = SubResource("CylinderMesh_joe23")
+
+[node name="cone2" type="MeshInstance3D" parent="housing" unique_id=1276974455]
+transform = Transform3D(-0.56299704, -0.49144995, 0.6644628, -0.8137977, 0.46984613, -0.34202003, -0.14410965, -0.7332946, -0.6644628, 0.04, -0.044, 0.02)
+mesh = SubResource("CylinderMesh_joe23")
+
+[node name="cone3" type="MeshInstance3D" parent="housing" unique_id=2032982535]
+transform = Transform3D(-0.56299704, 0.49144995, -0.6644628, 0.8137977, 0.46984613, -0.34202003, 0.14410965, -0.7332946, -0.6644628, -0.03965904, -0.04361441, 0.02)
+mesh = SubResource("CylinderMesh_joe23")

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://bd58wmudg6io2"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4y0ji"]
+lifetime_randomness = 1.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+initial_velocity_min = 5.0
+initial_velocity_max = 10.0
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -2.2351742e-06
+linear_accel_max = -2.2351742e-06
+damping_min = 0.1
+damping_max = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i4vdw"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.3764706)
+
+[sub_resource type="SphereMesh" id="SphereMesh_weh66"]
+material = SubResource("StandardMaterial3D_i4vdw")
+radius = 0.02
+height = 0.04
+rings = 4
+
+[node name="vaporjet" type="GPUParticles3D" unique_id=39535163]
+amount = 10
+lifetime = 0.05
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_4y0ji")
+draw_pass_1 = SubResource("SphereMesh_weh66")
