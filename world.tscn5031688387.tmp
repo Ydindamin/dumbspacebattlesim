@@ -1,0 +1,438 @@
+[gd_scene format=3 uid="uid://ckavqb25bdaul"]
+
+[ext_resource type="Script" uid="uid://bwcalexqj8t6y" path="res://scripts/playerController.gd" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://dp6ux6yt1vn7n" path="res://rcs.tscn" id="2_036b0"]
+[ext_resource type="PackedScene" uid="uid://bd58wmudg6io2" path="res://vaporjet.tscn" id="2_dwbse"]
+[ext_resource type="PackedScene" uid="uid://ey0fupgyf7i2" path="res://debris_1.tscn" id="2_tlwt5"]
+[ext_resource type="PackedScene" uid="uid://brod0wp1vjaga" path="res://debris_2.tscn" id="3_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://b63l48cdwlolh" path="res://debris_3.tscn" id="4_aqk2v"]
+
+[sub_resource type="Environment" id="Environment_f3sb7"]
+background_mode = 1
+ambient_light_color = Color(0.48962224, 0.48962224, 0.48962218, 1)
+ambient_light_energy = 16.0
+reflected_light_source = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_gv5m4"]
+size = Vector3(0.8, 1, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dwbse"]
+size = Vector3(0.3, 0.5, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pkg7o"]
+top_radius = 0.03
+bottom_radius = 0.06
+height = 1.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tlwt5"]
+top_radius = 0.3
+bottom_radius = 0.4
+height = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_aqk2v"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
+size = Vector3(0.8, 1, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3sb7"]
+albedo_color = Color(18.892157, 18.892157, 18.892157, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 16.0
+backlight_enabled = true
+backlight = Color(18.892157, 18.892157, 18.892157, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_tlwt5"]
+material = SubResource("StandardMaterial3D_f3sb7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fj7yv"]
+albedo_color = Color(0, 0.23529412, 1, 1)
+emission_enabled = true
+emission = Color(0.60758764, 0.8056394, 1, 1)
+emission_energy_multiplier = 0.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_aqk2v"]
+material = SubResource("StandardMaterial3D_fj7yv")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
+radius = 9.0
+height = 39.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+albedo_color = Color(0.12591085, 0.12591082, 0.12591088, 1)
+metallic = 1.0
+emission = Color(0.080783345, 0.080783345, 0.080783345, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_dwbse"]
+material = SubResource("StandardMaterial3D_036b0")
+radius = 10.0
+height = 40.0
+rings = 7
+
+[sub_resource type="SphereMesh" id="SphereMesh_fj7yv"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_tlwt5"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_tlwt5"]
+radius = 0.01
+
+[node name="World" type="Node3D" unique_id=1433116659]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1538659703]
+environment = SubResource("Environment_f3sb7")
+
+[node name="playership" type="RigidBody3D" parent="." unique_id=218136194]
+mass = 1000.0
+gravity_scale = 0.0
+can_sleep = false
+script = ExtResource("1_f3sb7")
+lookSpeed = 100.0
+boostStrength = 2800.0
+rollStrength = 600.0
+
+[node name="fuselage" type="MeshInstance3D" parent="playership" unique_id=1312006134]
+mesh = SubResource("BoxMesh_gv5m4")
+
+[node name="gun" type="MeshInstance3D" parent="playership/fuselage" unique_id=1556798997]
+transform = Transform3D(1, 0, 0, 0, 0.97291726, 0.23115362, 0, -0.23115362, 0.97291726, 0, 0.3730253, -0.29707682)
+mesh = SubResource("BoxMesh_dwbse")
+
+[node name="barrel" type="MeshInstance3D" parent="playership/fuselage/gun" unique_id=610317380]
+transform = Transform3D(1, 0, 0, 0, -0.25856617, -0.9659935, 0, 0.9659935, -0.25856617, 0, 0.029314429, 0.839772)
+mesh = SubResource("CylinderMesh_pkg7o")
+
+[node name="muzzle" type="Node3D" parent="playership/fuselage/gun/barrel" unique_id=575482556]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.003)
+
+[node name="rocketcone" type="MeshInstance3D" parent="playership/fuselage" unique_id=2112547215]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.2)
+mesh = SubResource("CylinderMesh_tlwt5")
+
+[node name="conelight" type="OmniLight3D" parent="playership/fuselage/rocketcone" unique_id=1515098505]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -0.333, 0)
+light_color = Color(0.78431374, 0.54901963, 0, 1)
+shadow_enabled = true
+
+[node name="lightcanL" type="MeshInstance3D" parent="playership/fuselage" unique_id=1259013893]
+transform = Transform3D(0.9961947, 0.08715574, -3.8096983e-09, 0, -4.371139e-08, -1, -0.08715574, 0.9961947, -4.3545054e-08, 0.4, 0, 0.92)
+mesh = SubResource("CylinderMesh_aqk2v")
+skeleton = NodePath("../..")
+
+[node name="frontlightL" type="SpotLight3D" parent="playership/fuselage/lightcanL" unique_id=213904041]
+transform = Transform3D(1, 8.881784e-16, 0, 0, -1.0728441e-07, -1, -4.440892e-16, 1, -1.07284414e-07, -0.009587109, 0.10958135, -4.7899533e-09)
+light_color = Color(0, 0, 0, 1)
+light_specular = 1.0
+spot_range = 40.0
+spot_attenuation = 0.2
+spot_angle = 15.0
+spot_angle_attenuation = 0.21022354
+
+[node name="lightcanR" type="MeshInstance3D" parent="playership/fuselage" unique_id=381091747]
+transform = Transform3D(0.9961947, -0.08715574, 3.8096983e-09, 0, -4.371139e-08, -1, 0.08715574, 0.9961947, -4.3545054e-08, -0.4, 0, 0.92)
+mesh = SubResource("CylinderMesh_aqk2v")
+skeleton = NodePath("../..")
+
+[node name="frontlightR" type="SpotLight3D" parent="playership/fuselage/lightcanR" unique_id=966930298]
+transform = Transform3D(1, -8.881784e-16, 0, 0, -1.0728441e-07, -1, 4.440892e-16, 1, -1.07284414e-07, 0.009587109, 0.10958135, -4.7899533e-09)
+light_color = Color(0, 0, 0, 1)
+light_specular = 1.0
+spot_range = 40.0
+spot_attenuation = 0.2
+spot_angle = 15.0
+spot_angle_attenuation = 0.21022354
+
+[node name="lasgun" type="Node3D" parent="playership/fuselage" unique_id=789918125]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.01)
+
+[node name="RCS_ULF" parent="playership/fuselage" unique_id=696507406 instance=ExtResource("2_036b0")]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0.38387713, 0.48980945, 0.98094374)
+
+[node name="RCS2_URF" parent="playership/fuselage" unique_id=123258682 instance=ExtResource("2_036b0")]
+transform = Transform3D(0.7071067, 0.4999999, -0.4999999, 0, 0.7071067, 0.7071067, 0.7071067, -0.4999999, 0.4999999, -0.384, 0.49, 0.981)
+
+[node name="RCS3_LLF" parent="playership/fuselage" unique_id=92322590 instance=ExtResource("2_036b0")]
+transform = Transform3D(-0.7071067, -0.5, 0.49999994, 6.181724e-08, -0.7071067, -0.7071067, 0.7071068, -0.49999988, 0.49999994, 0.384, -0.505, 0.981)
+
+[node name="RCS4_LRF" parent="playership/fuselage" unique_id=96107051 instance=ExtResource("2_036b0")]
+transform = Transform3D(-0.7071067, 0.50000006, -0.49999997, -6.181724e-08, -0.70710677, -0.70710677, -0.7071068, -0.4999999, 0.49999997, -0.37982062, -0.5, 0.9708879)
+
+[node name="RCS5_ULR" parent="playership/fuselage" unique_id=524874730 instance=ExtResource("2_036b0")]
+transform = Transform3D(-0.7071067, -0.49999994, 0.49999994, 0, 0.7071067, 0.7071067, -0.7071067, 0.49999994, -0.49999994, 0.38387713, 0.48980945, -1)
+
+[node name="RCS6_URR" parent="playership/fuselage" unique_id=1955206438 instance=ExtResource("2_036b0")]
+transform = Transform3D(-0.7071067, 0.4999999, -0.4999999, 0, 0.7071067, 0.7071067, 0.7071067, 0.4999999, -0.4999999, -0.384, 0.49, -1)
+
+[node name="RCS7_LLR" parent="playership/fuselage" unique_id=485864920 instance=ExtResource("2_036b0")]
+transform = Transform3D(0.7060687, -0.5001066, 0.5013584, 0.0022493734, -0.70640254, -0.7078066, 0.7081397, 0.5008878, -0.49764383, 0.384, -0.505, -1)
+
+[node name="RCS8_LRR" parent="playership/fuselage" unique_id=1514515138 instance=ExtResource("2_036b0")]
+transform = Transform3D(0.7071067, 0.5, -0.49999994, 6.181724e-08, -0.7071067, -0.7071067, -0.7071068, 0.49999988, -0.49999994, -0.37982062, -0.5, -1)
+
+[node name="vaporjet_UBR" parent="playership/fuselage" unique_id=39535163 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.371, 0.562, -0.99)
+emitting = false
+
+[node name="vaporjet_UBL" parent="playership/fuselage" unique_id=191722185 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.372, 0.562, -0.99)
+emitting = false
+
+[node name="vaporjet_UFR" parent="playership/fuselage" unique_id=777207938 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.371, 0.562, 0.98)
+emitting = false
+
+[node name="vaporjet_UFL" parent="playership/fuselage" unique_id=632439705 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.372, 0.562, 0.98)
+emitting = false
+
+[node name="vaporjet_DBR" parent="playership/fuselage" unique_id=2070878606 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, -0.371, -0.58000517, -0.99)
+emitting = false
+
+[node name="vaporjet_DBL" parent="playership/fuselage" unique_id=2110181940 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0.372, -0.58000517, -0.99)
+emitting = false
+
+[node name="vaporjet_DFR" parent="playership/fuselage" unique_id=1504068464 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, -0.371, -0.58000517, 0.98)
+emitting = false
+
+[node name="vaporjet_DFL" parent="playership/fuselage" unique_id=1174659806 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0.372, -0.58000517, 0.98)
+emitting = false
+
+[node name="vaporjet_RUF" parent="playership/fuselage" unique_id=714847390 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0, 1, -0.4850957, 0.47709537, 0.9904682)
+emitting = false
+
+[node name="vaporjet_RDF" parent="playership/fuselage" unique_id=598197473 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0, 1, -0.4850957, -0.4891151, 0.9843343)
+emitting = false
+
+[node name="vaporjet_RUB" parent="playership/fuselage" unique_id=1747247734 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0, 1, -0.4850957, 0.47709537, -1.005295)
+emitting = false
+
+[node name="vaporjet_RDB" parent="playership/fuselage" unique_id=323804229 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0, 1, -0.4850957, -0.4891151, -1.0114291)
+emitting = false
+
+[node name="vaporjet_LUF" parent="playership/fuselage" unique_id=1264937217 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.371138e-08, 0.9999998, 0, -0.9999998, -4.371138e-08, 0, 0, 0, 1, 0.47359324, 0.47709537, 0.9904682)
+emitting = false
+
+[node name="vaporjet_LDF" parent="playership/fuselage" unique_id=790486185 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, 0, 1, 0.47359324, -0.4891151, 0.9843343)
+emitting = false
+
+[node name="vaporjet_LUB" parent="playership/fuselage" unique_id=1829495690 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, 0, 1, 0.47359324, 0.47709537, -1.005295)
+emitting = false
+
+[node name="vaporjet_LDB" parent="playership/fuselage" unique_id=407271375 instance=ExtResource("2_dwbse")]
+transform = Transform3D(-4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, 0, 1, 0.47359324, -0.4891151, -1.0114291)
+emitting = false
+
+[node name="vaporjet_FUR" parent="playership/fuselage" unique_id=405835991 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, -0.38396376, 0.47842565, 1.0769562)
+emitting = false
+
+[node name="vaporjet_FUL" parent="playership/fuselage" unique_id=2059819515 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0.39157546, 0.47842565, 1.0769562)
+emitting = false
+
+[node name="vaporjet_FDR" parent="playership/fuselage" unique_id=1995638424 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, -0.38396376, -0.48975238, 1.0769562)
+emitting = false
+
+[node name="vaporjet_FDL" parent="playership/fuselage" unique_id=975311574 instance=ExtResource("2_dwbse")]
+transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0.39157546, -0.48975238, 1.0769562)
+emitting = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="playership" unique_id=354910219]
+shape = SubResource("BoxShape3D_f3sb7")
+
+[node name="Camera3D" type="Camera3D" parent="playership" unique_id=763207999]
+transform = Transform3D(-1, 2.2626681e-08, -8.444392e-08, 0, 0.9659259, 0.25881904, 8.742278e-08, 0.25881907, -0.9659259, 0, 2, -3)
+
+[node name="sun" type="MeshInstance3D" parent="." unique_id=1801053054]
+transform = Transform3D(2048, 0, 0, 0, 2048, 0, 0, 0, 2048, 128, 128, 4096)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="sun" unique_id=1646863373]
+light_color = Color(0.9171811, 0.9999997, 0.89824015, 1)
+light_energy = 16.0
+light_indirect_energy = 16.0
+shadow_enabled = true
+omni_range = 8192.0
+omni_attenuation = 0.1
+
+[node name="planet" type="MeshInstance3D" parent="." unique_id=305132737]
+transform = Transform3D(256, 0, 0, 0, 256, 0, 0, 0, 256, 0, 0, -1391.4263)
+mesh = SubResource("SphereMesh_aqk2v")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="planet" unique_id=1407109203]
+shadow_enabled = true
+omni_range = 1280.0
+omni_attenuation = 0.4
+
+[node name="asteroid" type="RigidBody3D" parent="." unique_id=994698070]
+transform = Transform3D(0.47084484, 0.6696023, 0.5744023, -0.17867894, 0.7099764, -0.6811807, -0.86393225, 0.21809682, 0.45393258, -25.999737, -5.5847397, 16.99529)
+mass = 10000.0
+gravity_scale = 0.0
+angular_velocity = Vector3(0, -0.034906585, 0.17453292)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="asteroid" unique_id=34559141]
+shape = SubResource("CapsuleShape3D_tlwt5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="asteroid" unique_id=523568511]
+mesh = SubResource("SphereMesh_dwbse")
+
+[node name="asteroid2" type="RigidBody3D" parent="." unique_id=403344328]
+transform = Transform3D(-0.09815097, -0.99237794, -0.074513525, 0.84696424, -0.12261211, 0.5173178, -0.52251107, -0.01233502, 0.8525432, 18.749828, -0.012763977, -58.830414)
+mass = 10000.0
+gravity_scale = 0.0
+angular_velocity = Vector3(0, -0.034906585, 0.17453292)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="asteroid2" unique_id=491567891]
+shape = SubResource("CapsuleShape3D_tlwt5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="asteroid2" unique_id=127010109]
+mesh = SubResource("SphereMesh_dwbse")
+
+[node name="sputnik" type="RigidBody3D" parent="." unique_id=1039276124]
+transform = Transform3D(-0.5359558, 0.23914288, 0.80966806, 0.17708209, -0.9058647, 0.3847741, 0.8254657, 0.34959954, 0.4431554, -1.5995085, -1.9169834, 8)
+mass = 100.0
+gravity_scale = 0.0
+
+[node name="body" type="MeshInstance3D" parent="sputnik" unique_id=1296039759]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = SubResource("SphereMesh_fj7yv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="sputnik" unique_id=1580302354]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("SphereShape3D_tlwt5")
+
+[node name="antenna1" type="MeshInstance3D" parent="sputnik" unique_id=1340137661]
+transform = Transform3D(0.9659258, -0.25881904, 1.131334e-08, 0, -4.371139e-08, -1, 0.25881904, 0.9659258, -4.222196e-08, 1.25, 0, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+
+[node name="antenna2" type="MeshInstance3D" parent="sputnik" unique_id=1285992586]
+transform = Transform3D(0.96592575, 0.25881904, -1.1313339e-08, 0, -4.371139e-08, -0.99999994, -0.258819, 0.9659258, -4.2221956e-08, -1.25, 0, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+skeleton = NodePath("../antenna1")
+
+[node name="antenna3" type="MeshInstance3D" parent="sputnik" unique_id=521942722]
+transform = Transform3D(0.9999999, 0, 0, 0, -0.25881898, -0.96592575, 0, 0.96592563, -0.258819, 0, 1.25, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+
+[node name="antenna4" type="MeshInstance3D" parent="sputnik" unique_id=430419754]
+transform = Transform3D(0.99999994, 0, 0, 0, -0.25881904, 0.96592575, 0, -0.9659258, -0.258819, 0, -1.25, -1)
+mesh = SubResource("CapsuleMesh_tlwt5")
+skeleton = NodePath("../antenna3")
+
+[node name="star" type="MeshInstance3D" parent="." unique_id=336205239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 128, 128)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star2" type="MeshInstance3D" parent="." unique_id=486559629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, -256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star3" type="MeshInstance3D" parent="." unique_id=142713324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star4" type="MeshInstance3D" parent="." unique_id=1749043793]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star5" type="MeshInstance3D" parent="." unique_id=2051033484]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star6" type="MeshInstance3D" parent="." unique_id=1629370016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -128, 128, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star7" type="MeshInstance3D" parent="." unique_id=2104512131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star8" type="MeshInstance3D" parent="." unique_id=965896356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, -128, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star9" type="MeshInstance3D" parent="." unique_id=1935684275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -128, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star10" type="MeshInstance3D" parent="." unique_id=1209474138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 0, 0)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star11" type="MeshInstance3D" parent="." unique_id=1599117313]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 128, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star12" type="MeshInstance3D" parent="." unique_id=1785417539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star13" type="MeshInstance3D" parent="." unique_id=395951264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 0, 0)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star14" type="MeshInstance3D" parent="." unique_id=112222397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 0, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star15" type="MeshInstance3D" parent="." unique_id=1883638832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 0, -128)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star16" type="MeshInstance3D" parent="." unique_id=1342414778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="debris1" parent="." unique_id=1894573125 instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.48672223, 0.82543886, 0.28592375, -0.7117188, 0.5644917, -0.4180974, -0.50651544, 0, 0.862231, 3.2184777, 2.3724322, 3.7976553)
+
+[node name="debris2" parent="." unique_id=643884259 instance=ExtResource("3_aqk2v")]
+transform = Transform3D(0.30831975, 0, -0.9512828, 0.65045923, 0.729697, 0.21081997, 0.6941482, -0.6837706, 0.22498, 2.4678926, 4.444309, 6.568337)
+
+[node name="debris3" parent="." unique_id=248284030 instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.6319055, 0.2544991, -0.7320696, -0.3095297, 0.94882226, 0.06267285, 0.7105539, 0.18699408, 0.6783409, -9.731171, -0.8537636, 4.44284)
+
+[node name="debris4" parent="." unique_id=1539228302 instance=ExtResource("3_aqk2v")]
+transform = Transform3D(-0.5652702, 0.65045923, -0.50731885, 0.8215279, 0.3883052, -0.41750568, -0.07457583, -0.65278006, -0.75386775, -3.0195532, 5.339588, 16.667736)
+
+[node name="debris5" parent="." unique_id=504771708 instance=ExtResource("4_aqk2v")]
+transform = Transform3D(0.6024978, 0.26142251, 0.754092, 0.79812056, -0.19734676, -0.56926084, 0, 0.94483465, -0.32754767, 4.2653217, 0.26684558, 22.511911)
+angular_velocity = Vector3(0.17453292, 0, 0.34906584)
+
+[node name="debris6" parent="." unique_id=1691735052 instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.48672223, 0.82543886, 0.28592375, -0.7117188, 0.5644917, -0.4180974, -0.50651544, 0, 0.862231, -7.8348517, 2.3724318, -4.21529)
+
+[node name="debris7" parent="." unique_id=1017787145 instance=ExtResource("3_aqk2v")]
+transform = Transform3D(0.30831975, 0, -0.9512828, 0.65045923, 0.729697, 0.21081997, 0.6941482, -0.6837706, 0.22498, -5.9740047, -3.5490627, -18.275238)
+
+[node name="debris8" parent="." unique_id=147304095 instance=ExtResource("2_tlwt5")]
+transform = Transform3D(0.6319055, 0.2544991, -0.7320696, -0.3095297, 0.94882226, 0.06267285, 0.7105539, 0.18699408, 0.6783409, 6.3335495, -4.6117477, -11.433695)
+
+[node name="debris9" parent="." unique_id=1363427229 instance=ExtResource("3_aqk2v")]
+transform = Transform3D(-0.5652702, 0.65045923, -0.50731885, 0.8215279, 0.3883052, -0.41750568, -0.07457583, -0.65278006, -0.75386775, 5.6756067, 5.339588, -15.596878)

@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bovvenbnf70n7"]
+
+[ext_resource type="Script" uid="uid://b0ai4m0vavw02" path="res://scripts/SpaceObject.gd" id="1_u87q6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_p0ukn"]
+radius = 9.0
+height = 39.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+albedo_color = Color(0.12591085, 0.12591082, 0.12591088, 1)
+metallic = 1.0
+emission = Color(0.080783345, 0.080783345, 0.080783345, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_gm5ib"]
+material = SubResource("StandardMaterial3D_036b0")
+radius = 10.0
+height = 40.0
+rings = 7
+
+[node name="asteroid" type="RigidBody3D" unique_id=683043227]
+gravity_scale = 0.0
+angular_velocity = Vector3(0, -0.034906585, 0.17453292)
+script = ExtResource("1_u87q6")
+
+[node name="asteroidshape" type="CollisionShape3D" parent="." unique_id=1467618771]
+shape = SubResource("CapsuleShape3D_p0ukn")
+
+[node name="asteroidmesh" type="MeshInstance3D" parent="." unique_id=634648055]
+mesh = SubResource("SphereMesh_gm5ib")

@@ -1,10 +1,23 @@
 extends RigidBody3D
 
-#@onready var p1ship : RigidBody3D = $/root/World/playership
+@export var healthMax : float = 100.0
+@export var lookSpeed : float = 10.0
+@export var boostStrength : float = 100
+@export var rollStrength : float = 0.67
+@export var stabilizerStrength : float = 1.5
+@export var thrustPowerMain : float = 5.0
+@export var thrustPowerRCS : float = 0.67
+@export var invertX : bool = false 
+@export var invertY : bool = false
+
+@onready var health : float = healthMax
 @onready var lasgun : Node3D = $fuselage/lasgun
 @onready var lightL : SpotLight3D = $fuselage/lightcanL/frontlightL
 @onready var lightR : SpotLight3D = $fuselage/lightcanR/frontlightR
 @onready var coneLight : OmniLight3D = $fuselage/rocketcone/conelight
+@onready var cannonMuzzle : Node3D = $fuselage/gun/barrel/muzzle
+@onready var throttleBar : ProgressBar = $Camera3D/shipUI/throttlebar
+@onready var debugText1 : Label = $Camera3D/shipUI/debugtext1
 @onready var vaporjetUBR : GPUParticles3D = $fuselage/vaporjet_UBR
 @onready var vaporjetUBL : GPUParticles3D = $fuselage/vaporjet_UBL
 @onready var vaporjetUFR : GPUParticles3D = $fuselage/vaporjet_UFR
@@ -25,26 +38,30 @@ extends RigidBody3D
 @onready var vaporjetFUL : GPUParticles3D = $fuselage/vaporjet_FUL
 @onready var vaporjetFDR : GPUParticles3D = $fuselage/vaporjet_FDR
 @onready var vaporjetFDL : GPUParticles3D = $fuselage/vaporjet_FDL
-@export var lookSpeed : float = 0.1
-@export var boostStrength : float = 100
-@export var rollStrength : float = 0.67
-@export var stabilizerStrength : float = 1.5
-@export var thrustPowerMain : float = 3.0
-@export var thrustPowerRCS : float = .67
-@export var invertX : bool = false 
-@export var invertY : bool = false
 
+signal receiveDamage(amount)
+signal receiveForce(amount, applyPoint, applyDir)
+
+var canControl : bool = true
+var beamtrail = preload("res://effects/beamtrail.tscn")
+var shell = preload("res://prefabs/shell.tscn")
+var Laser = preload("res://effects/laser.tscn")
+
+var throttle : float = 0.5
 var cooldown : Timer = Timer.new()
-var cooldownMax : float = 0.25
-var Laser = preload("res://laser.tscn")
+var cooldownMax : float = 1.0
 var lightsOn : bool = false
 var coneFlame : float = 0.0
-
+var debug : bool = false
 
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	cooldown.wait_time = cooldownMax
+	add_child(cooldown)
+	cooldown.wait_time = 0.0
+	cooldown.timeout.connect(reload)
+	receiveDamage.connect(applyDamage)
+	receiveForce.connect(applyForce)
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -59,66 +76,86 @@ func _physics_process(_delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		get_tree().quit()
-	if Input.is_action_just_pressed("pause"):
-		pass #TODO
-		
-	var thrust : Vector3 = Vector3.ZERO
-	var pivot : Vector3 = Vector3.ZERO
-	
-	
-	
-	if Input.is_action_pressed("fire") and cooldown.time_left <= 0.0:
-			var newLaser : Area3D = Laser.instantiate()
-			add_child(newLaser)
-			newLaser.position = lasgun.position
-			newLaser.rotation = lasgun.rotation
-			move_child(newLaser,1)
-			cooldown.start()
-	
-	if Input.is_action_just_pressed("lights"):
-		if lightsOn:
-			lightsOn = false
-			lightL.light_color = Color(0,0,0)
-			lightR.light_color = Color(0,0,0)
+	if Input.is_action_just_released("debug"):
+		debug = not debug
+		if debug:
+			debugText1.visible = true
 		else:
-			lightsOn = true
-			lightL.light_color = Color(1,1,1)
-			lightR.light_color = Color(1,1,1)
-	
-	if Input.is_action_pressed("arrest"):
-		var V : Vector3 = get_linear_velocity() * transform.basis
-		thrust = -1 * V
-	else:
-		if Input.is_action_pressed("move_forward"):
-			thrust += Vector3.MODEL_FRONT * thrustPowerMain
-		elif Input.is_action_pressed("move_back"):
-			thrust += Vector3.MODEL_REAR * thrustPowerRCS
-		if Input.is_action_pressed("move_left") != Input.is_action_pressed("move_right"):
-			if Input.is_action_pressed("move_left"):
-				thrust += Vector3.MODEL_LEFT * thrustPowerRCS
-			elif Input.is_action_pressed("move_right"):
-				thrust += Vector3.MODEL_RIGHT * thrustPowerRCS
-		if Input.is_action_pressed("move_up") != Input.is_action_pressed("move_down"):
-			if Input.is_action_pressed("move_up"):
-				thrust += Vector3.MODEL_TOP * thrustPowerRCS
-			elif Input.is_action_pressed("move_down"):
-				thrust += Vector3.MODEL_BOTTOM * thrustPowerRCS
-	
-	if Input.is_action_pressed("stabilize"):
-		angular_damp = stabilizerStrength
-	else:
-		angular_damp = 0.0
-	if Input.is_action_pressed("roll_CW") != Input.is_action_pressed("roll_CCW"):
-		if Input.is_action_pressed("roll_CW"):
-			pivot += Vector3.MODEL_FRONT
-		elif Input.is_action_pressed("roll_CCW"):
-			pivot += Vector3.MODEL_REAR
-	
-	coneLight.light_color = (coneLight.light_color+Color("c88c00")*thrust.z)/2
-	toggle_RCS(thrust, pivot)
-	
-	apply_central_force(transform.basis*thrust.normalized()*boostStrength)
-	apply_torque(transform.basis*pivot.normalized()*rollStrength)
+			debugText1.visible = false
+			
+	if canControl:
+		var thrust : Vector3 = Vector3.ZERO
+		var pivot : Vector3 = Vector3.ZERO
+		
+		if Input.is_action_just_pressed("fire") and cooldown.is_stopped():
+				fire_railgun()
+		
+		if Input.is_action_just_pressed("lights"):
+			if lightsOn:
+				lightsOn = false
+				lightL.light_energy = 0.0
+				lightR.light_energy = 0.0
+			else:
+				lightsOn = true
+				lightL.light_energy = 1.0
+				lightR.light_energy = 1.0
+		
+		if Input.is_action_just_pressed("throttle_up"):
+			throttle = min(1.0, throttle+0.1)
+			throttleBar.value = throttle
+		elif Input.is_action_just_pressed("throttle_down"):
+			throttle = max(0.0, throttle-0.1)
+			throttleBar.value = throttle
+			
+		if Input.is_action_pressed("arrest"):
+			var V : Vector3 = get_linear_velocity() * transform.basis
+			thrust = -1 * V
+		else:
+			if Input.is_action_pressed("move_forward"):
+				thrust += Vector3.MODEL_FRONT * thrustPowerMain * throttle
+			elif Input.is_action_pressed("move_back"):
+				thrust += Vector3.MODEL_REAR * thrustPowerRCS
+			if Input.is_action_pressed("move_left") != Input.is_action_pressed("move_right"):
+				if Input.is_action_pressed("move_left"):
+					thrust += Vector3.MODEL_LEFT * thrustPowerRCS
+				elif Input.is_action_pressed("move_right"):
+					thrust += Vector3.MODEL_RIGHT * thrustPowerRCS
+			if Input.is_action_pressed("move_up") != Input.is_action_pressed("move_down"):
+				if Input.is_action_pressed("move_up"):
+					thrust += Vector3.MODEL_TOP * thrustPowerRCS
+				elif Input.is_action_pressed("move_down"):
+					thrust += Vector3.MODEL_BOTTOM * thrustPowerRCS
+		
+		if Input.is_action_pressed("stabilize"):
+			angular_damp = stabilizerStrength
+		else:
+			angular_damp = 0.0
+		if Input.is_action_pressed("roll_CW") != Input.is_action_pressed("roll_CCW"):
+			if Input.is_action_pressed("roll_CW"):
+				pivot += Vector3.MODEL_FRONT
+			elif Input.is_action_pressed("roll_CCW"):
+				pivot += Vector3.MODEL_REAR
+		
+		coneLight.light_color = (coneLight.light_color+Color("c88c00")*thrust.z)/2
+		toggle_RCS(thrust, pivot)#-angular_velocity)a
+		
+		apply_central_force(transform.basis*thrust.normalized()*boostStrength)
+		apply_torque(transform.basis*pivot.normalized()*rollStrength)
+		if debug:
+			debugText1.text = "linear_vel: " + str(round(10*linear_velocity)/10) + "\nangular_vel: " + str(round(10*angular_velocity)/10) + "\npivot_vel: " + str(round(10*pivot)/10) + "\nthrust_vel: " + str(round(10*thrust)/10)
+
+func reload() -> void:
+	cooldown.stop()
+
+func fire_railgun() -> void:
+	var newShot : GPUParticles3D = beamtrail.instantiate()
+	get_tree().root.add_child(newShot)
+	newShot.global_position = cannonMuzzle.global_position
+	newShot.global_rotation = cannonMuzzle.global_rotation
+	newShot.emitting = true
+	apply_central_impulse(basis * Vector3.FORWARD * 5000)
+	cooldown.wait_time = cooldownMax
+	cooldown.start()
 
 func toggle_RCS(thrust:Vector3, pivot:Vector3) -> void:
 	if not (thrust == Vector3.ONE or pivot == Vector3.ONE):
@@ -185,3 +222,18 @@ func toggle_RCS(thrust:Vector3, pivot:Vector3) -> void:
 		vaporjetDFR.emitting = true
 		vaporjetUBL.emitting = true
 		vaporjetUFL.emitting = true
+
+func applyDamage(amount) -> void:
+	print("received ", amount, "damage")
+	health -= amount
+	if health <= 0:
+		kill()
+
+func applyForce(amount, applyPoint, applyDir) -> void:
+	print("received ", amount, "force")
+	apply_impulse(applyDir.normalized() * amount, applyPoint)
+
+func kill() -> void:
+	# TODO: death effect(s)
+	canControl = false
+	$fuselage.queue_free()

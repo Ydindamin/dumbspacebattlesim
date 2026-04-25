@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://bp3vtfmwtjvrx"]
+
+[ext_resource type="Script" uid="uid://b0ai4m0vavw02" path="res://scripts/SpaceObject.gd" id="1_h4ibf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_snvgt"]
+size = Vector3(2.1, 2.1, 3)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0lefo"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ksrsw"]
+radius = 0.01
+
+[node name="sputnik" type="RigidBody3D" unique_id=1679782241]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0, 0, 0)
+mass = 100.0
+gravity_scale = 0.0
+script = ExtResource("1_h4ibf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1408544952]
+transform = Transform3D(0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0, 0, 0, 1, 0, 0, -0.5)
+shape = SubResource("BoxShape3D_snvgt")
+
+[node name="sputnikbody" type="MeshInstance3D" parent="." unique_id=1459195098]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = SubResource("SphereMesh_0lefo")
+
+[node name="antenna1" type="MeshInstance3D" parent="sputnikbody" unique_id=2003080652]
+transform = Transform3D(0.4829629, -0.12940952, 5.65667e-09, 0, -2.1855694e-08, -0.5, 0.12940952, 0.4829629, -2.111098e-08, 0.625, 0, -0.5)
+mesh = SubResource("CapsuleMesh_ksrsw")
+skeleton = NodePath("../..")
+
+[node name="antenna2" type="MeshInstance3D" parent="sputnikbody" unique_id=2044585060]
+transform = Transform3D(0.48296288, 0.12940952, -5.6566694e-09, 0, -2.1855694e-08, -0.49999997, -0.1294095, 0.4829629, -2.1110978e-08, -0.625, 0, -0.5)
+mesh = SubResource("CapsuleMesh_ksrsw")
+skeleton = NodePath("../antenna1")
+
+[node name="antenna3" type="MeshInstance3D" parent="sputnikbody" unique_id=1655186922]
+transform = Transform3D(0.49999994, 0, 0, 0, -0.12940949, -0.48296288, 0, 0.48296282, -0.1294095, 0, 0.625, -0.5)
+mesh = SubResource("CapsuleMesh_ksrsw")
+skeleton = NodePath("../..")
+
+[node name="antenna4" type="MeshInstance3D" parent="sputnikbody" unique_id=1015733853]
+transform = Transform3D(0.49999994, 0, 0, 0, -0.12940952, 0.48296288, 0, -0.4829629, -0.1294095, 0, -0.625, -0.5)
+mesh = SubResource("CapsuleMesh_ksrsw")
+skeleton = NodePath("../antenna3")

@@ -4,12 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://brod0wp1vjaga" path="res://prefabs/debris_2.tscn" id="3_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://b1btv1e02ogx6" path="res://playership.tscn" id="4_036b0"]
 [ext_resource type="PackedScene" uid="uid://b63l48cdwlolh" path="res://prefabs/debris_3.tscn" id="4_aqk2v"]
-[ext_resource type="PackedScene" uid="uid://bovvenbnf70n7" path="res://prefabs/asteroid.tscn" id="5_dwbse"]
-[ext_resource type="PackedScene" uid="uid://bp3vtfmwtjvrx" path="res://prefabs/sputnik.tscn" id="6_pkg7o"]
 
 [sub_resource type="Environment" id="Environment_f3sb7"]
 background_mode = 1
-ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_color = Color(0.48962224, 0.48962224, 0.48962218, 1)
 ambient_light_energy = 16.0
 reflected_light_source = 1
 
@@ -59,6 +57,82 @@ shadow_enabled = true
 omni_range = 1280.0
 omni_attenuation = 0.4
 
+[node name="star" type="MeshInstance3D" parent="." unique_id=336205239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 128, 128)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star2" type="MeshInstance3D" parent="." unique_id=486559629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, -256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star3" type="MeshInstance3D" parent="." unique_id=142713324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star4" type="MeshInstance3D" parent="." unique_id=1749043793]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star5" type="MeshInstance3D" parent="." unique_id=2051033484]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star6" type="MeshInstance3D" parent="." unique_id=1629370016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -128, 128, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star7" type="MeshInstance3D" parent="." unique_id=2104512131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 256, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star8" type="MeshInstance3D" parent="." unique_id=965896356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, -128, -256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star9" type="MeshInstance3D" parent="." unique_id=1935684275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -128, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star10" type="MeshInstance3D" parent="." unique_id=1209474138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 0, 0)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star11" type="MeshInstance3D" parent="." unique_id=1599117313]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 128, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star12" type="MeshInstance3D" parent="." unique_id=1785417539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
+[node name="star13" type="MeshInstance3D" parent="." unique_id=395951264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 0, 0)
+mesh = SubResource("SphereMesh_tlwt5")
+
+[node name="star14" type="MeshInstance3D" parent="." unique_id=112222397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 0, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star")
+
+[node name="star15" type="MeshInstance3D" parent="." unique_id=1883638832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 0, -128)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star2")
+
+[node name="star16" type="MeshInstance3D" parent="." unique_id=1342414778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, -256, 256)
+mesh = SubResource("SphereMesh_tlwt5")
+skeleton = NodePath("../star3")
+
 [node name="debris1" parent="." unique_id=1894573125 instance=ExtResource("2_tlwt5")]
 transform = Transform3D(0.48672223, 0.82543886, 0.28592375, -0.7117188, 0.5644917, -0.4180974, -0.50651544, 0, 0.862231, 3.2184777, 2.3724322, 3.7976553)
 
@@ -88,19 +162,3 @@ transform = Transform3D(0.6319055, 0.2544991, -0.7320696, -0.3095297, 0.94882226
 transform = Transform3D(-0.5652702, 0.65045923, -0.50731885, 0.8215279, 0.3883052, -0.41750568, -0.07457583, -0.65278006, -0.75386775, 5.6756067, 5.339588, -15.596878)
 
 [node name="playership" parent="." unique_id=1722565139 instance=ExtResource("4_036b0")]
-
-[node name="asteroid" parent="." unique_id=683043227 instance=ExtResource("5_dwbse")]
-transform = Transform3D(0.67836297, 0.6170464, 0.3988451, -0.67288345, 0.73974854, 0, -0.29504508, -0.26837626, 0.9170183, -58.863316, 0, 24.334278)
-massKG = 10000.0
-healthMax = 10000.0
-initialRotVelocity = Vector3(0.1, 0.2, 0.3)
-
-[node name="asteroid2" parent="." unique_id=2108935267 instance=ExtResource("5_dwbse")]
-transform = Transform3D(0.86718374, -0.30116653, -0.39659938, 0.30668303, 0.95043594, -0.051157374, 0.39234915, -0.077267446, 0.91656524, 47.964607, 7.6293945e-06, -42.814587)
-massKG = 10000.0
-healthMax = 10000.0
-initialRotVelocity = Vector3(0.3, 0.2, 0.1)
-
-[node name="sputnik" parent="." unique_id=1679782241 instance=ExtResource("6_pkg7o")]
-transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 5.893959, 0, 13.896957)
-healthMax = 1000.0

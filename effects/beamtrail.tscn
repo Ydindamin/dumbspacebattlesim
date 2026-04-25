@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://diep2du1yjdpk"]
+
+[ext_resource type="Script" uid="uid://dnxku7op4isn" path="res://scripts/railgun.gd" id="1_4l8jx"]
+
+[sub_resource type="Curve" id="Curve_lto5q"]
+resource_local_to_scene = true
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.94932437, 0.16604984), -2.7392023, -2.7392023, 0, 0, Vector2(1, 0), -3.2014287, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_w1kyb"]
+curve = SubResource("Curve_lto5q")
+
+[sub_resource type="Gradient" id="Gradient_hybbr"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_vxwhs"]
+gradient = SubResource("Gradient_hybbr")
+width = 1
+
+[sub_resource type="Gradient" id="Gradient_rsged"]
+interpolation_mode = 2
+interpolation_color_space = 2
+colors = PackedColorArray(0, 1, 1, 1, 0, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_053b7"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_rsged")
+
+[sub_resource type="Curve" id="Curve_x4etg"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.10135136, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_3imto"]
+curve = SubResource("Curve_x4etg")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_h5ot7"]
+resource_local_to_scene = true
+emission_shape_offset = Vector3(0, 50, 0)
+gravity = Vector3(0, 0, 0)
+color = Color(0, 1, 1, 1)
+color_ramp = SubResource("GradientTexture1D_053b7")
+color_initial_ramp = SubResource("GradientTexture1D_vxwhs")
+alpha_curve = SubResource("CurveTexture_w1kyb")
+emission_curve = SubResource("CurveTexture_3imto")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dlcxi"]
+transparency = 1
+blend_mode = 1
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+albedo_color = Color(0, 1, 1, 1)
+emission_enabled = true
+emission = Color(0.3491902, 1, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5atrd"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_dlcxi")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 100.0
+
+[node name="railgunbeam" type="GPUParticles3D" unique_id=997649572]
+emitting = false
+amount = 1
+one_shot = true
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_h5ot7")
+draw_pass_1 = SubResource("CylinderMesh_5atrd")
+script = ExtResource("1_4l8jx")
+
+[node name="hitray" type="RayCast3D" parent="." unique_id=210354834]
+target_position = Vector3(0, 500, 0)
+debug_shape_custom_color = Color(1, 0, 1, 1)
+debug_shape_thickness = 4
+
+[node name="lifetimer" type="Timer" parent="." unique_id=674913332]
+one_shot = true
+autostart = true

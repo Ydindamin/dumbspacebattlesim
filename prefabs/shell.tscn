@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://1it4hvp30fgb"]
+
+[ext_resource type="PackedScene" uid="uid://ckc6jhv6kwkj0" path="res://effects/contrail.tscn" id="1_6fuaf"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_y3kr6"]
+resource_local_to_scene = true
+height = 1.2
+radius = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6fuaf"]
+resource_local_to_scene = true
+albedo_color = Color(1, 0.5019608, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.49411765, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_et3vo"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_6fuaf")
+top_radius = 0.3
+bottom_radius = 0.1
+height = 1.0
+
+[node name="shell" type="RigidBody3D" unique_id=1710559669]
+mass = 10.0
+gravity_scale = 0.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=310049338]
+transform = Transform3D(0.9999999, 0, 0, 0, -4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, -0.1)
+shape = SubResource("CylinderShape3D_y3kr6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1348095552]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_et3vo")
+
+[node name="contrail" parent="MeshInstance3D" unique_id=652171256 instance=ExtResource("1_6fuaf")]
+transform = Transform3D(3.090862e-08, 0.70710677, 0.7071067, 1, -4.371139e-08, 0, 3.090862e-08, 0.70710677, -0.7071067, 0, 0.5, 0)
