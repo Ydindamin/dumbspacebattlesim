@@ -43,6 +43,8 @@ signal receiveDamage(amount)
 signal receiveForce(amount, applyPoint, applyDir)
 
 var canControl : bool = true
+var pivotForce : Vector3 = Vector3.ZERO
+var deadZone : float = 0.67
 var beamtrail = preload("res://effects/beamtrail.tscn")
 var shell = preload("res://prefabs/shell.tscn")
 var Laser = preload("res://effects/laser.tscn")
@@ -65,12 +67,12 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		var pivotForce : Vector3 = Vector3.ZERO
-		if invertX: pivotForce -= Vector3.DOWN * event.screen_relative.x * lookSpeed
-		else: pivotForce += Vector3.DOWN * event.screen_relative.x * lookSpeed
-		if invertY: pivotForce += Vector3.LEFT * event.screen_relative.y * lookSpeed
-		else: pivotForce -= Vector3.LEFT * event.screen_relative.y * lookSpeed
-		apply_torque(transform.basis * pivotForce)
+		if abs(event.screen_relative.x) > deadZone:
+			if invertX: pivotForce -= Vector3.DOWN * event.screen_relative.x * lookSpeed
+			else: pivotForce += Vector3.DOWN * event.screen_relative.x * lookSpeed
+		if abs(event.screen_relative.y) > deadZone:
+			if invertY: pivotForce += Vector3.LEFT * event.screen_relative.y * lookSpeed
+			else: pivotForce -= Vector3.LEFT * event.screen_relative.y * lookSpeed
 
 func _physics_process(_delta):
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -85,7 +87,6 @@ func _physics_process(_delta):
 			
 	if canControl:
 		var thrust : Vector3 = Vector3.ZERO
-		var pivot : Vector3 = Vector3.ZERO
 		
 		if Input.is_action_just_pressed("fire") and cooldown.is_stopped():
 				fire_railgun()
@@ -132,17 +133,19 @@ func _physics_process(_delta):
 			angular_damp = 0.0
 		if Input.is_action_pressed("roll_CW") != Input.is_action_pressed("roll_CCW"):
 			if Input.is_action_pressed("roll_CW"):
-				pivot += Vector3.MODEL_FRONT
+				pivotForce += Vector3.MODEL_FRONT * rollStrength
 			elif Input.is_action_pressed("roll_CCW"):
-				pivot += Vector3.MODEL_REAR
+				pivotForce += Vector3.MODEL_REAR * rollStrength
 		
 		coneLight.light_color = (coneLight.light_color+Color("c88c00")*thrust.z)/2
-		toggle_RCS(thrust, pivot)#-angular_velocity)a
+		toggle_RCS(thrust, pivotForce)
 		
 		apply_central_force(transform.basis*thrust.normalized()*boostStrength)
-		apply_torque(transform.basis*pivot.normalized()*rollStrength)
+		#apply_torque(transform.basis*pivotForce.normalized()*rollStrength)
+		apply_torque(transform.basis*pivotForce)
 		if debug:
-			debugText1.text = "linear_vel: " + str(round(10*linear_velocity)/10) + "\nangular_vel: " + str(round(10*angular_velocity)/10) + "\npivot_vel: " + str(round(10*pivot)/10) + "\nthrust_vel: " + str(round(10*thrust)/10)
+			debugText1.text = "linear_vel: " + str(round(10*linear_velocity)/10) + "\nangular_vel: " + str(round(10*angular_velocity)/10) + "\npivot_vel: " + str(round(10*pivotForce)/10) + "\nthrust_vel: " + str(round(10*thrust)/10)
+		pivotForce = Vector3.ZERO
 
 func reload() -> void:
 	cooldown.stop()
@@ -158,53 +161,73 @@ func fire_railgun() -> void:
 	cooldown.start()
 
 func toggle_RCS(thrust:Vector3, pivot:Vector3) -> void:
-	if not (thrust == Vector3.ONE or pivot == Vector3.ONE):
-		vaporjetUBR.emitting = false
-		vaporjetUBL.emitting = false
-		vaporjetUFR.emitting = false
-		vaporjetUFL.emitting = false
-		vaporjetDBR.emitting = false
-		vaporjetDBL.emitting = false
-		vaporjetDFR.emitting = false
-		vaporjetDFL.emitting = false
-		vaporjetRUF.emitting = false
-		vaporjetRDF.emitting = false
-		vaporjetRUB.emitting = false
-		vaporjetRDB.emitting = false
-		vaporjetLUF.emitting = false
-		vaporjetLDF.emitting = false
-		vaporjetLUB.emitting = false
-		vaporjetLDB.emitting = false
-		vaporjetFUR.emitting = false
-		vaporjetFUL.emitting = false
-		vaporjetFDR.emitting = false
-		vaporjetFDL.emitting = false
-	if thrust.z < 0:
+	#if not (thrust == Vector3.ONE or pivot == Vector3.ONE):
+	vaporjetUBR.emitting = false
+	vaporjetUBL.emitting = false
+	vaporjetUFR.emitting = false
+	vaporjetUFL.emitting = false
+	vaporjetDBR.emitting = false
+	vaporjetDBL.emitting = false
+	vaporjetDFR.emitting = false
+	vaporjetDFL.emitting = false
+	vaporjetRUF.emitting = false
+	vaporjetRDF.emitting = false
+	vaporjetRUB.emitting = false
+	vaporjetRDB.emitting = false
+	vaporjetLUF.emitting = false
+	vaporjetLDF.emitting = false
+	vaporjetLUB.emitting = false
+	vaporjetLDB.emitting = false
+	vaporjetFUR.emitting = false
+	vaporjetFUL.emitting = false
+	vaporjetFDR.emitting = false
+	vaporjetFDL.emitting = false
+	if thrust.z < -0.1:
 		vaporjetFUR.emitting = true
 		vaporjetFUL.emitting = true
 		vaporjetFDR.emitting = true
 		vaporjetFDL.emitting = true
-	if thrust.x > 0:
+	if thrust.x > 0.1:
 		vaporjetRDF.emitting = true
 		vaporjetRDB.emitting = true
 		vaporjetRUF.emitting = true
 		vaporjetRUB.emitting = true
-	if thrust.x < 0:
+	if thrust.x < -0.1:
 		vaporjetLDF.emitting = true
 		vaporjetLDB.emitting = true
 		vaporjetLUF.emitting = true
 		vaporjetLUB.emitting = true
-	if thrust.y > 0:
+	if thrust.y > 0.1:
 		vaporjetDBR.emitting = true
 		vaporjetDBL.emitting = true
 		vaporjetDFR.emitting = true
 		vaporjetDFL.emitting = true
-	if thrust.y < 0:
+	if thrust.y < -0.1:
 		vaporjetUBR.emitting = true
 		vaporjetUBL.emitting = true
 		vaporjetUFR.emitting = true
 		vaporjetUFL.emitting = true
-	if pivot.z > 0:
+	if pivot.x > 1.0:
+		vaporjetDBL.emitting = true
+		vaporjetDBR.emitting = true
+		vaporjetUFL.emitting = true
+		vaporjetUFR.emitting = true
+	if pivot.x < -1.0:
+		vaporjetDFL.emitting = true
+		vaporjetDFR.emitting = true
+		vaporjetUBL.emitting = true
+		vaporjetUBR.emitting = true
+	if pivot.y > 1.0:
+		vaporjetRDF.emitting = true
+		vaporjetRUF.emitting = true
+		vaporjetLDB.emitting = true
+		vaporjetLUB.emitting = true
+	if pivot.y < -1.0:
+		vaporjetRDB.emitting = true
+		vaporjetRUB.emitting = true
+		vaporjetLDF.emitting = true
+		vaporjetLUF.emitting = true
+	if pivot.z > 1.0:
 		vaporjetRDF.emitting = true
 		vaporjetRDB.emitting = true
 		vaporjetLUF.emitting = true
@@ -213,7 +236,7 @@ func toggle_RCS(thrust:Vector3, pivot:Vector3) -> void:
 		vaporjetDFL.emitting = true
 		vaporjetUBR.emitting = true
 		vaporjetUFR.emitting = true
-	if pivot.z < 0:
+	if pivot.z < -1.0:
 		vaporjetRUF.emitting = true
 		vaporjetRUB.emitting = true
 		vaporjetLDF.emitting = true
